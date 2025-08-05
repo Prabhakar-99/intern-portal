@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #00C6FF, #007BFF);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    h2, h3 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f0f0f0;
+      margin: 6px 0;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    p {
+      margin: 8px 0;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .logout-btn {
+      margin-top: 25px;
+      padding: 12px 24px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Welcome, <%= user.username %>!</h2>
+
+    <% if (user.role === 'admin') { %>
+      <h3>Admin Dashboard</h3>
+      <p>List of Interns:</p>
+      <ul>
+        <% interns.forEach(intern => { %>
+          <li><strong><%= intern.username %></strong> - <%= intern.email %></li>
+        <% }) %>
+      </ul>
+    <% } else { %>
+      <h3>Intern Dashboard</h3>
+      <p><strong>Referral Code:</strong> <%= referralCode %></p>
+      <p><strong>Total Donations Raised:</strong> ₹<%= totalDonations %></p>
+
+      <h3>Rewards & Unlockables</h3>
+      <ul>
+        <% rewards.forEach(reward => { %>
+          <li><%= reward %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <form action="/logout" method="get">
+      <button type="submit" class="logout-btn">Logout</button>
+    </form>
+  </div>
+</body>
+</html>
