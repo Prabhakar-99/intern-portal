@@ -1,3 +1,4 @@
+// app.js
 const express = require("express");
 const path = require("path");
 const session = require('express-session');
@@ -5,22 +6,21 @@ const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const flash = require('connect-flash');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
+const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/internPortal')
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/internPortal')
   .then(() => console.log("✅ MongoDB connected"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
 
-
-const app = express();
-const port = 3000;
-
-app.use(express.urlencoded({extended:true}));
+// Middleware
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-//session middelware 
 app.use(session({
-  secret: 'yourSecretKey',
+  secret: process.env.SESSION_SECRET || 'yourSecretKey',
   resave: false,
   saveUninitialized: true
 }));
@@ -32,22 +32,22 @@ app.use((req, res, next) => {
   next();
 });
 
-//mount routes
+// Routes
 app.use('/', authRoutes);
-app.use('/', dashboardRoutes); 
+app.use('/', dashboardRoutes);
 
+// View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// it is for to get files from public folder 
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// to strt the serverr
-app.listen(port, ()=>{
-    console.log(`server is running at http://localhost:${port}`);
-});
+// Export the app for server.js
+module.exports = app;
