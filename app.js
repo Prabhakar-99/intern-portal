@@ -11,9 +11,16 @@ require('dotenv').config();
 const app = express();
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/internPortal')
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB connection error:", err));
+// mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/internPortal')
+//   .then(() => console.log("✅ MongoDB connected"))
+//   .catch(err => console.error("❌ MongoDB connection error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB connected to Atlas"))
+.catch((err) => console.error("❌ MongoDB Atlas connection error:", err));
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
